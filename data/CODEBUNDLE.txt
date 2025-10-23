@@ -1,4 +1,4 @@
-ECLIPSERA CODE BUNDLE — 2025-10-23T03:29:21
+ECLIPSERA CODE BUNDLE — 2025-10-23T03:33:56
 Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
 
 FILE TREE
@@ -1191,7 +1191,7 @@ class SkillRegistry:
 === END FILE ===
 
 === FILE: data/CODEBUNDLE.txt ===
-ECLIPSERA CODE BUNDLE — 2025-10-23T03:29:21
+ECLIPSERA CODE BUNDLE — 2025-10-23T03:33:56
 Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
 
 FILE TREE
@@ -2221,7 +2221,7 @@ if __name__ == "__main__":
 === END FILE ===
 
 === FILE: data/HANDOFF.txt ===
-ECLIPSERA HANDOFF — 2025-10-23T03:28:44
+ECLIPSERA HANDOFF — 2025-10-23T03:33:25
 
 What this is
 ------------
