@@ -1,42 +1,71 @@
-ECLIPSERA CODE BUNDLE — 2025-10-22T22:38:23
+ECLIPSERA CODE BUNDLE — 2025-10-23T03:21:46
 Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
 
 FILE TREE
 ---------
+.devcontainer/
+.devcontainer/devcontainer.json
+README.md
 agents/
-agents\planner.py
-agents\worker.py
+agents/planner.py
+agents/worker.py
 assets/
-assets\default_dialogue.json
-assets\default_level_meadow_v1.json
-assets\default_npcs.json
-assets\demo_dialogue.json
-assets\demo_level_meadow_v1.json
-assets\demo_npcs.json
+assets/default_dialogue.json
+assets/default_level_meadow_v1.json
+assets/default_npcs.json
+assets/demo_dialogue.json
+assets/demo_level_meadow_v1.json
+assets/demo_npcs.json
 bootstrap_eclipsera.py
 core/
-core\bus.py
-core\memory.py
-core\skills.py
+core/bus.py
+core/memory.py
+core/skills.py
 data/
-data\CODEBUNDLE.txt
-data\default_memory.json
-data\default_outline.json
-data\demo_memory.json
-data\demo_outline.json
-data\HANDOFF.txt
-data\state.json
-data\task_log.jsonl
-README.md
+data/CODEBUNDLE.txt
+data/HANDOFF.txt
+data/default_memory.json
+data/default_outline.json
+data/demo_memory.json
+data/demo_outline.json
+data/state.json
+data/task_log.jsonl
 run.py
 runtime/
-runtime\viewer.py
+runtime/viewer.py
 scripts/
-scripts\backup.py
-scripts\export_code_bundle.py
-scripts\export_handoff.py
-scripts\restore_from_bundle.py
+scripts/backup.py
+scripts/export_code_bundle.py
+scripts/export_handoff.py
+scripts/restore_from_bundle.py
 skills/
+
+=== FILE: .devcontainer/devcontainer.json ===
+{
+  "name": "Eclipsera - Python",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {},
+  "postCreateCommand": "python -m pip install --upgrade pip setuptools wheel && pip install pygame-ce && python -c \"import sys; print('Python', sys.version); import pygame; print('pygame', pygame.version.ver)\"",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}
+
+=== END FILE ===
+
+=== FILE: README.md ===
+# Eclipsera
+Autonomous agents that create video games (content, levels, NPCs, and runtime).
+- Run: `python run.py`
+- Export handoff: `python scripts\export_handoff.py`
+- Backup zip: `python scripts\backup.py`
+
+=== END FILE ===
 
 === FILE: agents/planner.py ===
 class PlannerAgent:
@@ -1162,45 +1191,74 @@ class SkillRegistry:
 === END FILE ===
 
 === FILE: data/CODEBUNDLE.txt ===
-ECLIPSERA CODE BUNDLE — 2025-10-22T22:38:23
+ECLIPSERA CODE BUNDLE — 2025-10-23T03:21:46
 Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
 
 FILE TREE
 ---------
+.devcontainer/
+.devcontainer/devcontainer.json
+README.md
 agents/
-agents\planner.py
-agents\worker.py
+agents/planner.py
+agents/worker.py
 assets/
-assets\default_dialogue.json
-assets\default_level_meadow_v1.json
-assets\default_npcs.json
-assets\demo_dialogue.json
-assets\demo_level_meadow_v1.json
-assets\demo_npcs.json
+assets/default_dialogue.json
+assets/default_level_meadow_v1.json
+assets/default_npcs.json
+assets/demo_dialogue.json
+assets/demo_level_meadow_v1.json
+assets/demo_npcs.json
 bootstrap_eclipsera.py
 core/
-core\bus.py
-core\memory.py
-core\skills.py
+core/bus.py
+core/memory.py
+core/skills.py
 data/
-data\CODEBUNDLE.txt
-data\default_memory.json
-data\default_outline.json
-data\demo_memory.json
-data\demo_outline.json
-data\HANDOFF.txt
-data\state.json
-data\task_log.jsonl
-README.md
+data/CODEBUNDLE.txt
+data/HANDOFF.txt
+data/default_memory.json
+data/default_outline.json
+data/demo_memory.json
+data/demo_outline.json
+data/state.json
+data/task_log.jsonl
 run.py
 runtime/
-runtime\viewer.py
+runtime/viewer.py
 scripts/
-scripts\backup.py
-scripts\export_code_bundle.py
-scripts\export_handoff.py
-scripts\restore_from_bundle.py
+scripts/backup.py
+scripts/export_code_bundle.py
+scripts/export_handoff.py
+scripts/restore_from_bundle.py
 skills/
+
+=== FILE: .devcontainer/devcontainer.json ===
+{
+  "name": "Eclipsera - Python",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {},
+  "postCreateCommand": "python -m pip install --upgrade pip setuptools wheel && pip install pygame-ce && python -c \"import sys; print('Python', sys.version); import pygame; print('pygame', pygame.version.ver)\"",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}
+
+=== END FILE ===
+
+=== FILE: README.md ===
+# Eclipsera
+Autonomous agents that create video games (content, levels, NPCs, and runtime).
+- Run: `python run.py`
+- Export handoff: `python scripts\export_handoff.py`
+- Backup zip: `python scripts\backup.py`
+
+=== END FILE ===
 
 === FILE: agents/planner.py ===
 class PlannerAgent:
@@ -2162,6 +2220,89 @@ if __name__ == "__main__":
 
 === END FILE ===
 
+=== FILE: data/HANDOFF.txt ===
+ECLIPSERA HANDOFF — 2025-10-23T03:21:26
+
+What this is
+------------
+Autonomous agents that generate a small playable slice (outline, level JSON, NPCs, dialogue) plus a simple viewer.
+
+How to run on a fresh machine (Windows, PowerShell)
+---------------------------------------------------
+1) Create/activate venv:
+   py -m venv .venv
+   . .\.venv\Scripts\Activate.ps1
+   python -m pip install --upgrade pip setuptools wheel
+2) Install viewer dependency:
+   pip install pygame-ce
+3) Generate & run viewer:
+   python run.py --goal "Create a small top-down demo with coins and two NPCs" --project default --viewer
+
+Current project snapshot
+------------------------
+Projects in state: ['default', 'demo']
+Outlines found: ['demo_outline.json', 'default_outline.json']
+Task log present: True
+
+Last recorded plan
+------------------
+Goal: Update level & NPCs
+Tasks:
+  - design_game_outline {'goal': 'Update level & NPCs', 'project': 'default'}
+  - generate_level_json {'name': 'meadow_v1', 'project': 'default'}
+  - generate_npcs {'project': 'default'}
+  - write_dialogue {'project': 'default'}
+
+File tree
+---------
+.
+  - README.md
+  - bootstrap_eclipsera.py
+  - run.py
+  .devcontainer
+    - devcontainer.json
+  agents
+    - planner.py
+    - worker.py
+  data
+    - CODEBUNDLE.txt
+    - HANDOFF.txt
+    - default_memory.json
+    - default_outline.json
+    - demo_memory.json
+    - demo_outline.json
+    - state.json
+    - task_log.jsonl
+  assets
+    - default_dialogue.json
+    - default_level_meadow_v1.json
+    - default_npcs.json
+    - demo_dialogue.json
+    - demo_level_meadow_v1.json
+    - demo_npcs.json
+  skills
+  scripts
+    - backup.py
+    - export_code_bundle.py
+    - export_handoff.py
+    - restore_from_bundle.py
+  core
+    - bus.py
+    - memory.py
+    - skills.py
+  runtime
+    - viewer.py
+  .vscode
+    - settings.json
+
+Next suggested steps
+--------------------
+- Add collisions & dialogue UI to the viewer.
+- Add richer NPC generation (traits, movement patterns).
+- Add Critic agent to propose v2/v3 refinements.
+
+=== END FILE ===
+
 === FILE: data/default_memory.json ===
 {
   "notes": [
@@ -2311,6 +2452,11 @@ if __name__ == "__main__":
     "Executed design_game_outline",
     "Executed generate_level_json",
     "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Update level & NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
     "Executed write_dialogue"
   ],
   "facts": []
@@ -2320,8 +2466,8 @@ if __name__ == "__main__":
 === FILE: data/default_outline.json ===
 {
   "project": "default",
-  "timestamp": 1761186615,
-  "pitch": "A tiny vertical slice toward: Restore viewer",
+  "timestamp": 1761189658,
+  "pitch": "A tiny vertical slice toward: Update level & NPCs",
   "mechanics": [
     "top-down movement",
     "collision",
@@ -2372,87 +2518,6 @@ if __name__ == "__main__":
     "merchant_v1"
   ]
 }
-=== END FILE ===
-
-=== FILE: data/HANDOFF.txt ===
-ECLIPSERA HANDOFF — 2025-10-22T22:38:23
-
-What this is
-------------
-Autonomous agents that generate a small playable slice (outline, level JSON, NPCs, dialogue) plus a simple viewer.
-
-How to run on a fresh machine (Windows, PowerShell)
----------------------------------------------------
-1) Create/activate venv:
-   py -m venv .venv
-   . .\.venv\Scripts\Activate.ps1
-   python -m pip install --upgrade pip setuptools wheel
-2) Install viewer dependency:
-   pip install pygame-ce
-3) Generate & run viewer:
-   python run.py --goal "Create a small top-down demo with coins and two NPCs" --project default --viewer
-
-Current project snapshot
-------------------------
-Projects in state: ['default', 'demo']
-Outlines found: ['default_outline.json', 'demo_outline.json']
-Task log present: True
-
-Last recorded plan
-------------------
-Goal: Restore viewer
-Tasks:
-  - design_game_outline {'goal': 'Restore viewer', 'project': 'default'}
-  - generate_level_json {'name': 'meadow_v1', 'project': 'default'}
-  - generate_npcs {'project': 'default'}
-  - write_dialogue {'project': 'default'}
-
-File tree
----------
-.
-  - README.md
-  - bootstrap_eclipsera.py
-  - run.py
-  .vscode
-    - settings.json
-  agents
-    - planner.py
-    - worker.py
-  assets
-    - default_dialogue.json
-    - default_level_meadow_v1.json
-    - default_npcs.json
-    - demo_dialogue.json
-    - demo_level_meadow_v1.json
-    - demo_npcs.json
-  core
-    - bus.py
-    - memory.py
-    - skills.py
-  data
-    - CODEBUNDLE.txt
-    - HANDOFF.txt
-    - default_memory.json
-    - default_outline.json
-    - demo_memory.json
-    - demo_outline.json
-    - state.json
-    - task_log.jsonl
-  runtime
-    - viewer.py
-  scripts
-    - backup.py
-    - export_code_bundle.py
-    - export_handoff.py
-    - restore_from_bundle.py
-  skills
-
-Next suggested steps
---------------------
-- Add collisions & dialogue UI to the viewer.
-- Add richer NPC generation (traits, movement patterns).
-- Add Critic agent to propose v2/v3 refinements.
-
 === END FILE ===
 
 === FILE: data/state.json ===
@@ -2511,6 +2576,26 @@ Next suggested steps
           "type": "level",
           "path": "assets/default_level_meadow_v1.json",
           "summary": "Level meadow_v1 with corridors generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
         },
         {
           "type": "npcs",
@@ -3228,15 +3313,11 @@ Next suggested steps
 {"ts": 1761186615.8494225, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
 {"ts": 1761186615.850265, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
 {"ts": 1761186615.851088, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
-
-=== END FILE ===
-
-=== FILE: README.md ===
-# Eclipsera
-Autonomous agents that create video games (content, levels, NPCs, and runtime).
-- Run: `python run.py`
-- Export handoff: `python scripts\export_handoff.py`
-- Backup zip: `python scripts\backup.py`
+{"ts": 1761189658.8727555, "type": "plan", "plan": {"goal": "Update level & NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Update level & NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761189658.8734374, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Update level & NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761189658.8745608, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761189658.8752165, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761189658.8761647, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
 
 === END FILE ===
 

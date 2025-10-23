@@ -583,6 +583,26 @@
           "type": "dialogue",
           "path": "assets/default_dialogue.json",
           "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
         }
       ]
     },

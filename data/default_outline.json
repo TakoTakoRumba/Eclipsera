@@ -1,7 +1,7 @@
 {
   "project": "default",
-  "timestamp": 1761186615,
-  "pitch": "A tiny vertical slice toward: Restore viewer",
+  "timestamp": 1761189658,
+  "pitch": "A tiny vertical slice toward: Update level & NPCs",
   "mechanics": [
     "top-down movement",
     "collision",

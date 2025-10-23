@@ -1,4 +1,4 @@
-ECLIPSERA HANDOFF — 2025-10-22T22:38:23
+ECLIPSERA HANDOFF — 2025-10-23T03:21:26
 
 What this is
 ------------
@@ -18,14 +18,14 @@ How to run on a fresh machine (Windows, PowerShell)
 Current project snapshot
 ------------------------
 Projects in state: ['default', 'demo']
-Outlines found: ['default_outline.json', 'demo_outline.json']
+Outlines found: ['demo_outline.json', 'default_outline.json']
 Task log present: True
 
 Last recorded plan
 ------------------
-Goal: Restore viewer
+Goal: Update level & NPCs
 Tasks:
-  - design_game_outline {'goal': 'Restore viewer', 'project': 'default'}
+  - design_game_outline {'goal': 'Update level & NPCs', 'project': 'default'}
   - generate_level_json {'name': 'meadow_v1', 'project': 'default'}
   - generate_npcs {'project': 'default'}
   - write_dialogue {'project': 'default'}
@@ -36,22 +36,11 @@ File tree
   - README.md
   - bootstrap_eclipsera.py
   - run.py
-  .vscode
-    - settings.json
+  .devcontainer
+    - devcontainer.json
   agents
     - planner.py
     - worker.py
-  assets
-    - default_dialogue.json
-    - default_level_meadow_v1.json
-    - default_npcs.json
-    - demo_dialogue.json
-    - demo_level_meadow_v1.json
-    - demo_npcs.json
-  core
-    - bus.py
-    - memory.py
-    - skills.py
   data
     - CODEBUNDLE.txt
     - HANDOFF.txt
@@ -61,14 +50,27 @@ File tree
     - demo_outline.json
     - state.json
     - task_log.jsonl
-  runtime
-    - viewer.py
+  assets
+    - default_dialogue.json
+    - default_level_meadow_v1.json
+    - default_npcs.json
+    - demo_dialogue.json
+    - demo_level_meadow_v1.json
+    - demo_npcs.json
+  skills
   scripts
     - backup.py
     - export_code_bundle.py
     - export_handoff.py
     - restore_from_bundle.py
-  skills
+  core
+    - bus.py
+    - memory.py
+    - skills.py
+  runtime
+    - viewer.py
+  .vscode
+    - settings.json
 
 Next suggested steps
 --------------------
