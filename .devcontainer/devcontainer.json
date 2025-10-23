@@ -1,0 +1,14 @@
+{
+  "name": "Eclipsera - Python",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {},
+  "postCreateCommand": "python -m pip install --upgrade pip setuptools wheel && pip install pygame-ce && python -c \"import sys; print('Python', sys.version); import pygame; print('pygame', pygame.version.ver)\"",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  }
+}
