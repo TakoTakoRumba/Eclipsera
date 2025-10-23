@@ -1,0 +1,16 @@
+[
+  {
+    "id": "guide_v1",
+    "name": "Astra",
+    "role": "guide",
+    "x": 6,
+    "y": 6
+  },
+  {
+    "id": "merchant_v1",
+    "name": "Roux",
+    "role": "merchant",
+    "x": 11,
+    "y": 7
+  }
+]

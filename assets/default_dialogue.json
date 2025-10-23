@@ -1,0 +1,22 @@
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Move with WASD or arrows."
+    },
+    {
+      "who": "Astra",
+      "text": "Press E to talk. Press SPACE to advance."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "I trade tips for coins… when we add inventory 😉"
+    }
+  ]
+}

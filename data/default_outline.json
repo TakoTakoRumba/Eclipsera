@@ -1,0 +1,19 @@
+{
+  "project": "default",
+  "timestamp": 1761186615,
+  "pitch": "A tiny vertical slice toward: Restore viewer",
+  "mechanics": [
+    "top-down movement",
+    "collision",
+    "talk to NPCs (E)"
+  ],
+  "art": "placeholder sprites",
+  "music": "placeholder loop",
+  "levels": [
+    "meadow_v1"
+  ],
+  "npcs": [
+    "guide_v1",
+    "merchant_v1"
+  ]
+}

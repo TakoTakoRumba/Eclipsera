@@ -1,0 +1,19 @@
+{
+  "project": "demo",
+  "timestamp": 1761098179,
+  "pitch": "A tiny vertical slice toward: Make a meadow level with 10 coins and a guide",
+  "mechanics": [
+    "top-down movement",
+    "collect items",
+    "talk to NPCs"
+  ],
+  "art": "placeholder sprites",
+  "music": "placeholder loop",
+  "levels": [
+    "meadow_v1"
+  ],
+  "npcs": [
+    "guide_v1",
+    "merchant_v1"
+  ]
+}

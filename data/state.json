@@ -1,0 +1,617 @@
+{
+  "projects": {
+    "default": {
+      "created": 1761097769.3838327,
+      "notes": "",
+      "artifacts": [
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with walls generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with corridors generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        }
+      ]
+    },
+    "demo": {
+      "created": 1761098179.9438968,
+      "notes": "",
+      "artifacts": [
+        {
+          "type": "outline",
+          "path": "data/demo_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/demo_level_meadow_v1.json",
+          "summary": "Level meadow_v1 generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/demo_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/demo_dialogue.json",
+          "summary": "Dialogue written."
+        }
+      ]
+    }
+  },
+  "current_project": "default"
+}

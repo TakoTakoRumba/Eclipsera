@@ -1,0 +1,3903 @@
+ECLIPSERA CODE BUNDLE — 2025-10-22T22:38:23
+Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
+
+FILE TREE
+---------
+agents/
+agents\planner.py
+agents\worker.py
+assets/
+assets\default_dialogue.json
+assets\default_level_meadow_v1.json
+assets\default_npcs.json
+assets\demo_dialogue.json
+assets\demo_level_meadow_v1.json
+assets\demo_npcs.json
+bootstrap_eclipsera.py
+core/
+core\bus.py
+core\memory.py
+core\skills.py
+data/
+data\CODEBUNDLE.txt
+data\default_memory.json
+data\default_outline.json
+data\demo_memory.json
+data\demo_outline.json
+data\HANDOFF.txt
+data\state.json
+data\task_log.jsonl
+README.md
+run.py
+runtime/
+runtime\viewer.py
+scripts/
+scripts\backup.py
+scripts\export_code_bundle.py
+scripts\export_handoff.py
+scripts\restore_from_bundle.py
+skills/
+
+=== FILE: agents/planner.py ===
+class PlannerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def propose_plan(self, goal:str):
+        tasks = [
+            {"skill":"design_game_outline","args":{"goal":goal, "project":self.project}},
+            {"skill":"generate_level_json","args":{"name":"meadow_v1","project":self.project}},
+            {"skill":"generate_npcs","args":{"project":self.project}},
+            {"skill":"write_dialogue","args":{"project":self.project}}
+        ]
+        self.memory.add_note(f"Planned {len(tasks)} tasks toward: {goal}")
+        return {"goal": goal, "tasks": tasks}
+
+=== END FILE ===
+
+=== FILE: agents/worker.py ===
+class WorkerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def execute_task(self, task:dict):
+        name = task.get("skill")
+        args = task.get("args", {})
+        result = self.skills.call(name, **args)
+        self.memory.add_note(f"Executed {name}")
+        return result
+
+=== END FILE ===
+
+=== FILE: assets/default_dialogue.json ===
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Move with WASD or arrows."
+    },
+    {
+      "who": "Astra",
+      "text": "Press E to talk. Press SPACE to advance."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "I trade tips for coins… when we add inventory 😉"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/default_level_meadow_v1.json ===
+{
+  "name": "meadow_v1",
+  "tiles": [
+    [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      "#",
+      "#",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      "#",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ]
+  ],
+  "player_spawn": [
+    2,
+    2
+  ],
+  "objects": [
+    {
+      "type": "coin",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "type": "coin",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "type": "coin",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "type": "coin",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "type": "coin",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "type": "coin",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "type": "coin",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "type": "coin",
+      "x": 9,
+      "y": 5
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 3,
+      "text": "Collect all coins, then ESC to quit."
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/default_npcs.json ===
+[
+  {
+    "id": "guide_v1",
+    "name": "Astra",
+    "role": "guide",
+    "x": 6,
+    "y": 6
+  },
+  {
+    "id": "merchant_v1",
+    "name": "Roux",
+    "role": "merchant",
+    "x": 11,
+    "y": 7
+  }
+]
+=== END FILE ===
+
+=== FILE: assets/demo_dialogue.json ===
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Collect 5 coins and visit Roux."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "Care to trade a coin for a hint?"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/demo_level_meadow_v1.json ===
+{
+  "name": "meadow_v1",
+  "tiles": [
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ]
+  ],
+  "player_spawn": [
+    2,
+    2
+  ],
+  "objects": [
+    {
+      "type": "coin",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 3,
+      "text": "Hello!"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/demo_npcs.json ===
+[
+  {
+    "id": "guide_v1",
+    "name": "Astra",
+    "role": "guide",
+    "x": 4,
+    "y": 4
+  },
+  {
+    "id": "merchant_v1",
+    "name": "Roux",
+    "role": "merchant",
+    "x": 9,
+    "y": 6
+  }
+]
+=== END FILE ===
+
+=== FILE: bootstrap_eclipsera.py ===
+import os, json, textwrap, zipfile, datetime, shutil
+
+ROOT = os.getcwd()
+
+FILES = {
+    "README.md": """# Eclipsera
+Autonomous agents that create video games (content, levels, NPCs, and runtime).
+- Run: `python run.py`
+- Export handoff: `python scripts\\export_handoff.py`
+- Backup zip: `python scripts\\backup.py`
+""",
+
+    "run.py": """import argparse, json, os, sys, time
+from core.bus import MessageBus
+from core.memory import Memory
+from core.skills import SkillRegistry
+from agents.planner import PlannerAgent
+from agents.worker import WorkerAgent
+
+DATA_DIR = "data"
+STATE_FILE = os.path.join(DATA_DIR, "state.json")
+LOG_FILE = os.path.join(DATA_DIR, "task_log.jsonl")
+
+def ensure_dirs():
+    for d in ["core","agents","runtime","skills","assets","data","scripts"]:
+        os.makedirs(d, exist_ok=True)
+
+def load_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE,"r",encoding="utf-8") as f:
+            return json.load(f)
+    return {"projects": {}, "current_project":"default"}
+
+def save_state(state):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    with open(STATE_FILE,"w",encoding="utf-8") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+
+def log_task(event):
+    with open(LOG_FILE,"a",encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\\n")
+
+def main():
+    ensure_dirs()
+    parser = argparse.ArgumentParser(description="Eclipsera runner")
+    parser.add_argument("--goal", type=str, default="Create a small top-down demo",
+                        help="High-level creation goal")
+    parser.add_argument("--project", type=str, default="default", help="Project name")
+    parser.add_argument("--viewer", action="store_true", help="Launch the viewer after generation")
+    args = parser.parse_args()
+
+    state = load_state()
+    state["current_project"] = args.project
+    if args.project not in state["projects"]:
+        state["projects"][args.project] = {"created": time.time(), "notes": ""}
+
+    bus = MessageBus()
+    mem = Memory(os.path.join("data", f"{args.project}_memory.json"))
+    skills = SkillRegistry()
+    skills.register_defaults()
+
+    planner = PlannerAgent(bus, mem, skills, project=args.project)
+    worker  = WorkerAgent(bus, mem, skills, project=args.project)
+
+    plan = planner.propose_plan(args.goal)
+    log_task({"ts": time.time(), "type":"plan", "plan": plan})
+    for task in plan.get("tasks", []):
+        result = worker.execute_task(task)
+        log_task({"ts": time.time(), "type":"task_result", "task": task, "result": result})
+        state["projects"][args.project].setdefault("artifacts", []).append(result)
+
+    save_state(state)
+
+    if args.viewer:
+        from runtime.viewer import run_viewer
+        run_viewer(args.project)
+
+    print("Done. See data/task_log.jsonl and assets/ for outputs.")
+    print("Tip: export handoff -> python scripts/export_handoff.py")
+
+if __name__ == "__main__":
+    main()
+""",
+
+    os.path.join("core","bus.py"): """class MessageBus:
+    def __init__(self):
+        self._subscribers = {}
+
+    def subscribe(self, topic, fn):
+        self._subscribers.setdefault(topic, []).append(fn)
+
+    def publish(self, topic, payload):
+        for fn in self._subscribers.get(topic, []):
+            fn(payload)
+""",
+
+    os.path.join("core","memory.py"): """import json, os
+
+class Memory:
+    def __init__(self, path):
+        self.path = path
+        self.data = {"notes": [], "facts": []}
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    self.data = json.load(f)
+            except Exception:
+                pass
+
+    def add_note(self, text):
+        self.data["notes"].append(text)
+        self._save()
+
+    def remember(self, fact):
+        self.data["facts"].append(fact)
+        self._save()
+
+    def _save(self):
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.data, f, indent=2, ensure_ascii=False)
+""",
+
+    os.path.join("core","skills.py"): """import json, os, time
+
+class SkillRegistry:
+    def __init__(self):
+        self.skills = {}
+
+    def register(self, name, fn):
+        self.skills[name] = fn
+
+    def call(self, name, **kwargs):
+        if name not in self.skills:
+            raise KeyError(f"Unknown skill: {name}")
+        return self.skills[name](**kwargs)
+
+    def register_defaults(self):
+        self.register("design_game_outline", self._design_game_outline)
+        self.register("generate_level_json", self._generate_level_json)
+        self.register("generate_npcs", self._generate_npcs)
+        self.register("write_dialogue", self._write_dialogue)
+
+    def _design_game_outline(self, goal:str, project:str):
+        ts = int(time.time())
+        outline = {
+            "project": project,
+            "timestamp": ts,
+            "pitch": f"A tiny vertical slice toward: {goal}",
+            "mechanics": ["top-down movement", "collect items", "talk to NPCs"],
+            "art": "placeholder sprites",
+            "music": "placeholder loop",
+            "levels": ["meadow_v1"],
+            "npcs": ["guide_v1","merchant_v1"]
+        }
+        self._write_json(f"data/{project}_outline.json", outline)
+        return {"type":"outline", "path": f"data/{project}_outline.json", "summary":"Game outline created."}
+
+    def _generate_level_json(self, name:str, project:str):
+        level = {
+            "name": name,
+            "tiles": [["." for _ in range(16)] for _ in range(12)],
+            "player_spawn": [2,2],
+            "objects": [{"type":"coin","x":5,"y":5},{"type":"sign","x":8,"y":3,"text":"Hello!"}]
+        }
+        p = f"assets/{project}_level_{name}.json"
+        self._write_json(p, level)
+        return {"type":"level", "path": p, "summary": f"Level {name} generated."}
+
+    def _generate_npcs(self, project:str):
+        npcs = [
+            {"id":"guide_v1","name":"Astra","role":"guide","x":4,"y":4},
+            {"id":"merchant_v1","name":"Roux","role":"merchant","x":9,"y":6}
+        ]
+        p = f"assets/{project}_npcs.json"
+        self._write_json(p, npcs)
+        return {"type":"npcs", "path": p, "summary": "Basic NPCs created."}
+
+    def _write_dialogue(self, project:str):
+        dlg = {
+            "guide_v1":[
+                {"who":"Astra","text":"Welcome to Eclipsera!"},
+                {"who":"Astra","text":"Collect 5 coins and visit Roux."}
+            ],
+            "merchant_v1":[
+                {"who":"Roux","text":"Care to trade a coin for a hint?"}
+            ]
+        }
+        p = f"assets/{project}_dialogue.json"
+        self._write_json(p, dlg)
+        return {"type":"dialogue","path":p,"summary":"Dialogue written."}
+
+    def _write_json(self, path, obj):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(obj, f, indent=2, ensure_ascii=False)
+""",
+
+    os.path.join("agents","planner.py"): """class PlannerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def propose_plan(self, goal:str):
+        tasks = [
+            {"skill":"design_game_outline","args":{"goal":goal, "project":self.project}},
+            {"skill":"generate_level_json","args":{"name":"meadow_v1","project":self.project}},
+            {"skill":"generate_npcs","args":{"project":self.project}},
+            {"skill":"write_dialogue","args":{"project":self.project}}
+        ]
+        self.memory.add_note(f"Planned {len(tasks)} tasks toward: {goal}")
+        return {"goal": goal, "tasks": tasks}
+""",
+
+    os.path.join("agents","worker.py"): """class WorkerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def execute_task(self, task:dict):
+        name = task.get("skill")
+        args = task.get("args", {})
+        result = self.skills.call(name, **args)
+        self.memory.add_note(f"Executed {name}")
+        return result
+""",
+
+    os.path.join("runtime","viewer.py"): """import json, os, sys, time
+import pygame
+
+def load_level(path):
+    with open(path,"r",encoding="utf-8") as f:
+        return json.load(f)
+
+def load_npcs(path):
+    with open(path,"r",encoding="utf-8") as f:
+        return json.load(f)
+
+def run_viewer(project:str):
+    level_path = f"assets/{project}_level_meadow_v1.json"
+    npcs_path  = f"assets/{project}_npcs.json"
+    dialogue_path = f"assets/{project}_dialogue.json"
+
+    if not (os.path.exists(level_path) and os.path.exists(npcs_path)):
+        print("No generated assets yet. Run: python run.py --viewer")
+        return
+
+    with open(dialogue_path,"r",encoding="utf-8") as f:
+        dialogue = json.load(f)
+
+    lvl = load_level(level_path)
+    npcs = load_npcs(npcs_path)
+
+    pygame.init()
+    tile = 32
+    w, h = len(lvl["tiles"][0])*tile, len(lvl["tiles"])*tile
+    screen = pygame.display.set_mode((w, h))
+    pygame.display.set_caption("Eclipsera Viewer")
+
+    clock = pygame.time.Clock()
+    px, py = lvl["player_spawn"]
+    player = pygame.Rect(px*tile, py*tile, tile, tile)
+    speed = 3
+
+    def draw():
+        screen.fill((30,30,30))
+        for y,row in enumerate(lvl["tiles"]):
+            for x,_ in enumerate(row):
+                pygame.draw.rect(screen,(60,60,60), pygame.Rect(x*tile,y*tile,tile,tile),1)
+        for obj in lvl.get("objects",[]):
+            r = pygame.Rect(obj["x"]*tile, obj["y"]*tile, tile, tile)
+            pygame.draw.rect(screen,(200,200,0) if obj["type"]=="coin" else (0,150,200), r)
+        for n in npcs:
+            r = pygame.Rect(n["x"]*tile, n["y"]*tile, tile, tile)
+            pygame.draw.rect(screen,(200,80,80), r)
+        pygame.draw.rect(screen,(200,200,200), player)
+        pygame.display.flip()
+
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit(); return
+        keys = pygame.key.get_pressed()
+        dx = dy = 0
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]: dx -= speed
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]: dx += speed
+        if keys[pygame.K_UP] or keys[pygame.K_w]: dy -= speed
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]: dy += speed
+        player.move_ip(dx,dy)
+        draw()
+        clock.tick(60)
+"""
+}
+
+def write_files():
+    for path, content in FILES.items():
+        full = os.path.join(ROOT, path)
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "w", encoding="utf-8") as f:
+            f.write(textwrap.dedent(content))
+
+def main():
+    write_files()
+    print("✅ Eclipsera scaffold created successfully.")
+    print("Next steps:")
+    print("1️⃣ Run your first generation:")
+    print("   python run.py --goal \"Create a small top-down demo\" --project default --viewer")
+    print("2️⃣ (Optional) Export handoff for new ChatGPT session:")
+    print("   python scripts/export_handoff.py")
+    print("3️⃣ (Optional) Backup:")
+    print("   python scripts/backup.py")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: core/bus.py ===
+class MessageBus:
+    def __init__(self):
+        self._subscribers = {}
+
+    def subscribe(self, topic, fn):
+        self._subscribers.setdefault(topic, []).append(fn)
+
+    def publish(self, topic, payload):
+        for fn in self._subscribers.get(topic, []):
+            fn(payload)
+
+=== END FILE ===
+
+=== FILE: core/memory.py ===
+import json, os
+
+class Memory:
+    def __init__(self, path):
+        self.path = path
+        self.data = {"notes": [], "facts": []}
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    self.data = json.load(f)
+            except Exception:
+                pass
+
+    def add_note(self, text):
+        self.data["notes"].append(text)
+        self._save()
+
+    def remember(self, fact):
+        self.data["facts"].append(fact)
+        self._save()
+
+    def _save(self):
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.data, f, indent=2, ensure_ascii=False)
+
+=== END FILE ===
+
+=== FILE: core/skills.py ===
+import json, os, time, random
+
+class SkillRegistry:
+    def __init__(self):
+        self.skills = {}
+
+    def register(self, name, fn):
+        self.skills[name] = fn
+
+    # NOTE: use skill_name to avoid clashing with task arg "name"
+    def call(self, skill_name, **kwargs):
+        if skill_name not in self.skills:
+            raise KeyError(f"Unknown skill: {skill_name}")
+        return self.skills[skill_name](**kwargs)
+
+    def register_defaults(self):
+        self.register("design_game_outline", self._design_game_outline)
+        self.register("generate_level_json", self._generate_level_json)
+        self.register("generate_npcs", self._generate_npcs)
+        self.register("write_dialogue", self._write_dialogue)
+
+    # --- Basic skills ---
+
+    def _design_game_outline(self, goal:str, project:str):
+        ts = int(time.time())
+        outline = {
+            "project": project,
+            "timestamp": ts,
+            "pitch": f"A tiny vertical slice toward: {goal}",
+            "mechanics": ["top-down movement", "collision", "talk to NPCs (E)"],
+            "art": "placeholder sprites",
+            "music": "placeholder loop",
+            "levels": ["meadow_v1"],
+            "npcs": ["guide_v1","merchant_v1"]
+        }
+        self._write_json(f"data/{project}_outline.json", outline)
+        return {"type":"outline", "path": f"data/{project}_outline.json", "summary":"Game outline created."}
+
+    def _generate_level_json(self, name:str, project:str):
+        import random
+        W, H = 16, 12
+        tiles = [["." for _ in range(W)] for _ in range(H)]
+
+        # Solid border
+        for x in range(W):
+            tiles[0][x] = "#"; tiles[H-1][x] = "#"
+        for y in range(H):
+            tiles[y][0] = "#"; tiles[y][W-1] = "#"
+
+        # Random interior walls
+        random.seed(42)
+        for _ in range(18):
+            x = random.randint(2, W-3)
+            y = random.randint(2, H-3)
+            tiles[y][x] = "#"
+
+        # Guaranteed center cross corridors
+        midx, midy = W//2, H//2
+        for x in range(1, W-1): tiles[midy][x] = "."
+        for y in range(1, H-1): tiles[y][midx] = "."
+
+        # Clear spawn
+        spawn = [2, 2]
+        for yy in range(spawn[1], min(spawn[1]+2, H)):
+            for xx in range(spawn[0], min(spawn[0]+2, W)):
+                tiles[yy][xx] = "."
+
+        # Scatter coins on open tiles (avoid walls/spawn)
+        placed = set()
+        def is_open(x,y): return tiles[y][x] == "." and (x,y) not in placed and (x,y) != tuple(spawn)
+        coins = []
+        for _ in range(8):
+            for _try in range(50):
+                x, y = random.randint(1, W-2), random.randint(1, H-2)
+                if is_open(x,y):
+                    coins.append({"type":"coin","x":x,"y":y})
+                    placed.add((x,y)); break
+
+        objects = coins + [
+            {"type":"sign","x":8,"y":3,"text":"Collect all coins, then ESC to quit."}
+        ]
+
+        level = {"name": name, "tiles": tiles, "player_spawn": spawn, "objects": objects}
+        p = f"assets/{project}_level_{name}.json"
+        self._write_json(p, level)
+        return {"type":"level", "path": p, "summary": f"Level {name} with coins/signs generated."}
+
+
+    def _generate_npcs(self, project:str):
+        npcs = [
+            {"id":"guide_v1","name":"Astra","role":"guide","x":6,"y":6},
+            {"id":"merchant_v1","name":"Roux","role":"merchant","x":11,"y":7}
+        ]
+        p = f"assets/{project}_npcs.json"
+        self._write_json(p, npcs)
+        return {"type":"npcs", "path": p, "summary": "Basic NPCs created."}
+
+    def _write_dialogue(self, project:str):
+        dlg = {
+            "guide_v1":[
+                {"who":"Astra","text":"Welcome to Eclipsera!"},
+                {"who":"Astra","text":"Move with WASD or arrows."},
+                {"who":"Astra","text":"Press E to talk. Press SPACE to advance."}
+            ],
+            "merchant_v1":[
+                {"who":"Roux","text":"I trade tips for coins… when we add inventory 😉"}
+            ]
+        }
+        p = f"assets/{project}_dialogue.json"
+        self._write_json(p, dlg)
+        return {"type":"dialogue","path":p,"summary":"Dialogue written."}
+
+    def _write_json(self, path, obj):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(obj, f, indent=2, ensure_ascii=False)
+
+=== END FILE ===
+
+=== FILE: data/CODEBUNDLE.txt ===
+ECLIPSERA CODE BUNDLE — 2025-10-22T22:38:23
+Format: Each file is delimited by lines starting with === FILE: and === END FILE ===
+
+FILE TREE
+---------
+agents/
+agents\planner.py
+agents\worker.py
+assets/
+assets\default_dialogue.json
+assets\default_level_meadow_v1.json
+assets\default_npcs.json
+assets\demo_dialogue.json
+assets\demo_level_meadow_v1.json
+assets\demo_npcs.json
+bootstrap_eclipsera.py
+core/
+core\bus.py
+core\memory.py
+core\skills.py
+data/
+data\CODEBUNDLE.txt
+data\default_memory.json
+data\default_outline.json
+data\demo_memory.json
+data\demo_outline.json
+data\HANDOFF.txt
+data\state.json
+data\task_log.jsonl
+README.md
+run.py
+runtime/
+runtime\viewer.py
+scripts/
+scripts\backup.py
+scripts\export_code_bundle.py
+scripts\export_handoff.py
+scripts\restore_from_bundle.py
+skills/
+
+=== FILE: agents/planner.py ===
+class PlannerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def propose_plan(self, goal:str):
+        tasks = [
+            {"skill":"design_game_outline","args":{"goal":goal, "project":self.project}},
+            {"skill":"generate_level_json","args":{"name":"meadow_v1","project":self.project}},
+            {"skill":"generate_npcs","args":{"project":self.project}},
+            {"skill":"write_dialogue","args":{"project":self.project}}
+        ]
+        self.memory.add_note(f"Planned {len(tasks)} tasks toward: {goal}")
+        return {"goal": goal, "tasks": tasks}
+
+=== END FILE ===
+
+=== FILE: agents/worker.py ===
+class WorkerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def execute_task(self, task:dict):
+        name = task.get("skill")
+        args = task.get("args", {})
+        result = self.skills.call(name, **args)
+        self.memory.add_note(f"Executed {name}")
+        return result
+
+=== END FILE ===
+
+=== FILE: assets/default_dialogue.json ===
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Move with WASD or arrows."
+    },
+    {
+      "who": "Astra",
+      "text": "Press E to talk. Press SPACE to advance."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "I trade tips for coins… when we add inventory 😉"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/default_level_meadow_v1.json ===
+{
+  "name": "meadow_v1",
+  "tiles": [
+    [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      "#",
+      "#",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      "#",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "#"
+    ],
+    [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ]
+  ],
+  "player_spawn": [
+    2,
+    2
+  ],
+  "objects": [
+    {
+      "type": "coin",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "type": "coin",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "type": "coin",
+      "x": 14,
+      "y": 6
+    },
+    {
+      "type": "coin",
+      "x": 13,
+      "y": 1
+    },
+    {
+      "type": "coin",
+      "x": 12,
+      "y": 8
+    },
+    {
+      "type": "coin",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "type": "coin",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "type": "coin",
+      "x": 9,
+      "y": 5
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 3,
+      "text": "Collect all coins, then ESC to quit."
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/default_npcs.json ===
+[
+  {
+    "id": "guide_v1",
+    "name": "Astra",
+    "role": "guide",
+    "x": 6,
+    "y": 6
+  },
+  {
+    "id": "merchant_v1",
+    "name": "Roux",
+    "role": "merchant",
+    "x": 11,
+    "y": 7
+  }
+]
+=== END FILE ===
+
+=== FILE: assets/demo_dialogue.json ===
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Collect 5 coins and visit Roux."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "Care to trade a coin for a hint?"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/demo_level_meadow_v1.json ===
+{
+  "name": "meadow_v1",
+  "tiles": [
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ],
+    [
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      ".",
+      "."
+    ]
+  ],
+  "player_spawn": [
+    2,
+    2
+  ],
+  "objects": [
+    {
+      "type": "coin",
+      "x": 5,
+      "y": 5
+    },
+    {
+      "type": "sign",
+      "x": 8,
+      "y": 3,
+      "text": "Hello!"
+    }
+  ]
+}
+=== END FILE ===
+
+=== FILE: assets/demo_npcs.json ===
+[
+  {
+    "id": "guide_v1",
+    "name": "Astra",
+    "role": "guide",
+    "x": 4,
+    "y": 4
+  },
+  {
+    "id": "merchant_v1",
+    "name": "Roux",
+    "role": "merchant",
+    "x": 9,
+    "y": 6
+  }
+]
+=== END FILE ===
+
+=== FILE: bootstrap_eclipsera.py ===
+import os, json, textwrap, zipfile, datetime, shutil
+
+ROOT = os.getcwd()
+
+FILES = {
+    "README.md": """# Eclipsera
+Autonomous agents that create video games (content, levels, NPCs, and runtime).
+- Run: `python run.py`
+- Export handoff: `python scripts\\export_handoff.py`
+- Backup zip: `python scripts\\backup.py`
+""",
+
+    "run.py": """import argparse, json, os, sys, time
+from core.bus import MessageBus
+from core.memory import Memory
+from core.skills import SkillRegistry
+from agents.planner import PlannerAgent
+from agents.worker import WorkerAgent
+
+DATA_DIR = "data"
+STATE_FILE = os.path.join(DATA_DIR, "state.json")
+LOG_FILE = os.path.join(DATA_DIR, "task_log.jsonl")
+
+def ensure_dirs():
+    for d in ["core","agents","runtime","skills","assets","data","scripts"]:
+        os.makedirs(d, exist_ok=True)
+
+def load_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE,"r",encoding="utf-8") as f:
+            return json.load(f)
+    return {"projects": {}, "current_project":"default"}
+
+def save_state(state):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    with open(STATE_FILE,"w",encoding="utf-8") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+
+def log_task(event):
+    with open(LOG_FILE,"a",encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\\n")
+
+def main():
+    ensure_dirs()
+    parser = argparse.ArgumentParser(description="Eclipsera runner")
+    parser.add_argument("--goal", type=str, default="Create a small top-down demo",
+                        help="High-level creation goal")
+    parser.add_argument("--project", type=str, default="default", help="Project name")
+    parser.add_argument("--viewer", action="store_true", help="Launch the viewer after generation")
+    args = parser.parse_args()
+
+    state = load_state()
+    state["current_project"] = args.project
+    if args.project not in state["projects"]:
+        state["projects"][args.project] = {"created": time.time(), "notes": ""}
+
+    bus = MessageBus()
+    mem = Memory(os.path.join("data", f"{args.project}_memory.json"))
+    skills = SkillRegistry()
+    skills.register_defaults()
+
+    planner = PlannerAgent(bus, mem, skills, project=args.project)
+    worker  = WorkerAgent(bus, mem, skills, project=args.project)
+
+    plan = planner.propose_plan(args.goal)
+    log_task({"ts": time.time(), "type":"plan", "plan": plan})
+    for task in plan.get("tasks", []):
+        result = worker.execute_task(task)
+        log_task({"ts": time.time(), "type":"task_result", "task": task, "result": result})
+        state["projects"][args.project].setdefault("artifacts", []).append(result)
+
+    save_state(state)
+
+    if args.viewer:
+        from runtime.viewer import run_viewer
+        run_viewer(args.project)
+
+    print("Done. See data/task_log.jsonl and assets/ for outputs.")
+    print("Tip: export handoff -> python scripts/export_handoff.py")
+
+if __name__ == "__main__":
+    main()
+""",
+
+    os.path.join("core","bus.py"): """class MessageBus:
+    def __init__(self):
+        self._subscribers = {}
+
+    def subscribe(self, topic, fn):
+        self._subscribers.setdefault(topic, []).append(fn)
+
+    def publish(self, topic, payload):
+        for fn in self._subscribers.get(topic, []):
+            fn(payload)
+""",
+
+    os.path.join("core","memory.py"): """import json, os
+
+class Memory:
+    def __init__(self, path):
+        self.path = path
+        self.data = {"notes": [], "facts": []}
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    self.data = json.load(f)
+            except Exception:
+                pass
+
+    def add_note(self, text):
+        self.data["notes"].append(text)
+        self._save()
+
+    def remember(self, fact):
+        self.data["facts"].append(fact)
+        self._save()
+
+    def _save(self):
+        os.makedirs(os.path.dirname(self.path), exist_ok=True)
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump(self.data, f, indent=2, ensure_ascii=False)
+""",
+
+    os.path.join("core","skills.py"): """import json, os, time
+
+class SkillRegistry:
+    def __init__(self):
+        self.skills = {}
+
+    def register(self, name, fn):
+        self.skills[name] = fn
+
+    def call(self, name, **kwargs):
+        if name not in self.skills:
+            raise KeyError(f"Unknown skill: {name}")
+        return self.skills[name](**kwargs)
+
+    def register_defaults(self):
+        self.register("design_game_outline", self._design_game_outline)
+        self.register("generate_level_json", self._generate_level_json)
+        self.register("generate_npcs", self._generate_npcs)
+        self.register("write_dialogue", self._write_dialogue)
+
+    def _design_game_outline(self, goal:str, project:str):
+        ts = int(time.time())
+        outline = {
+            "project": project,
+            "timestamp": ts,
+            "pitch": f"A tiny vertical slice toward: {goal}",
+            "mechanics": ["top-down movement", "collect items", "talk to NPCs"],
+            "art": "placeholder sprites",
+            "music": "placeholder loop",
+            "levels": ["meadow_v1"],
+            "npcs": ["guide_v1","merchant_v1"]
+        }
+        self._write_json(f"data/{project}_outline.json", outline)
+        return {"type":"outline", "path": f"data/{project}_outline.json", "summary":"Game outline created."}
+
+    def _generate_level_json(self, name:str, project:str):
+        level = {
+            "name": name,
+            "tiles": [["." for _ in range(16)] for _ in range(12)],
+            "player_spawn": [2,2],
+            "objects": [{"type":"coin","x":5,"y":5},{"type":"sign","x":8,"y":3,"text":"Hello!"}]
+        }
+        p = f"assets/{project}_level_{name}.json"
+        self._write_json(p, level)
+        return {"type":"level", "path": p, "summary": f"Level {name} generated."}
+
+    def _generate_npcs(self, project:str):
+        npcs = [
+            {"id":"guide_v1","name":"Astra","role":"guide","x":4,"y":4},
+            {"id":"merchant_v1","name":"Roux","role":"merchant","x":9,"y":6}
+        ]
+        p = f"assets/{project}_npcs.json"
+        self._write_json(p, npcs)
+        return {"type":"npcs", "path": p, "summary": "Basic NPCs created."}
+
+    def _write_dialogue(self, project:str):
+        dlg = {
+            "guide_v1":[
+                {"who":"Astra","text":"Welcome to Eclipsera!"},
+                {"who":"Astra","text":"Collect 5 coins and visit Roux."}
+            ],
+            "merchant_v1":[
+                {"who":"Roux","text":"Care to trade a coin for a hint?"}
+            ]
+        }
+        p = f"assets/{project}_dialogue.json"
+        self._write_json(p, dlg)
+        return {"type":"dialogue","path":p,"summary":"Dialogue written."}
+
+    def _write_json(self, path, obj):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(obj, f, indent=2, ensure_ascii=False)
+""",
+
+    os.path.join("agents","planner.py"): """class PlannerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def propose_plan(self, goal:str):
+        tasks = [
+            {"skill":"design_game_outline","args":{"goal":goal, "project":self.project}},
+            {"skill":"generate_level_json","args":{"name":"meadow_v1","project":self.project}},
+            {"skill":"generate_npcs","args":{"project":self.project}},
+            {"skill":"write_dialogue","args":{"project":self.project}}
+        ]
+        self.memory.add_note(f"Planned {len(tasks)} tasks toward: {goal}")
+        return {"goal": goal, "tasks": tasks}
+""",
+
+    os.path.join("agents","worker.py"): """class WorkerAgent:
+    def __init__(self, bus, memory, skills, project:str):
+        self.bus = bus
+        self.memory = memory
+        self.skills = skills
+        self.project = project
+
+    def execute_task(self, task:dict):
+        name = task.get("skill")
+        args = task.get("args", {})
+        result = self.skills.call(name, **args)
+        self.memory.add_note(f"Executed {name}")
+        return result
+""",
+
+    os.path.join("runtime","viewer.py"): """import json, os, sys, time
+import pygame
+
+def load_level(path):
+    with open(path,"r",encoding="utf-8") as f:
+        return json.load(f)
+
+def load_npcs(path):
+    with open(path,"r",encoding="utf-8") as f:
+        return json.load(f)
+
+def run_viewer(project:str):
+    level_path = f"assets/{project}_level_meadow_v1.json"
+    npcs_path  = f"assets/{project}_npcs.json"
+    dialogue_path = f"assets/{project}_dialogue.json"
+
+    if not (os.path.exists(level_path) and os.path.exists(npcs_path)):
+        print("No generated assets yet. Run: python run.py --viewer")
+        return
+
+    with open(dialogue_path,"r",encoding="utf-8") as f:
+        dialogue = json.load(f)
+
+    lvl = load_level(level_path)
+    npcs = load_npcs(npcs_path)
+
+    pygame.init()
+    tile = 32
+    w, h = len(lvl["tiles"][0])*tile, len(lvl["tiles"])*tile
+    screen = pygame.display.set_mode((w, h))
+    pygame.display.set_caption("Eclipsera Viewer")
+
+    clock = pygame.time.Clock()
+    px, py = lvl["player_spawn"]
+    player = pygame.Rect(px*tile, py*tile, tile, tile)
+    speed = 3
+
+    def draw():
+        screen.fill((30,30,30))
+        for y,row in enumerate(lvl["tiles"]):
+            for x,_ in enumerate(row):
+                pygame.draw.rect(screen,(60,60,60), pygame.Rect(x*tile,y*tile,tile,tile),1)
+        for obj in lvl.get("objects",[]):
+            r = pygame.Rect(obj["x"]*tile, obj["y"]*tile, tile, tile)
+            pygame.draw.rect(screen,(200,200,0) if obj["type"]=="coin" else (0,150,200), r)
+        for n in npcs:
+            r = pygame.Rect(n["x"]*tile, n["y"]*tile, tile, tile)
+            pygame.draw.rect(screen,(200,80,80), r)
+        pygame.draw.rect(screen,(200,200,200), player)
+        pygame.display.flip()
+
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit(); return
+        keys = pygame.key.get_pressed()
+        dx = dy = 0
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]: dx -= speed
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]: dx += speed
+        if keys[pygame.K_UP] or keys[pygame.K_w]: dy -= speed
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]: dy += speed
+        player.move_ip(dx,dy)
+        draw()
+        clock.tick(60)
+"""
+}
+
+def write_files():
+    for path, content in FILES.items():
+        full = os.path.join(ROOT, path)
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "w", encoding="utf-8") as f:
+            f.write(textwrap.dedent(content))
+
+def main():
+    write_files()
+    print("✅ Eclipsera scaffold created successfully.")
+    print("Next steps:")
+    print("1️⃣ Run your first generation:")
+    print("   python run.py --goal \"Create a small top-down demo\" --project default --viewer")
+    print("2️⃣ (Optional) Export handoff for new ChatGPT session:")
+    print("   python scripts/export_handoff.py")
+    print("3️⃣ (Optional) Backup:")
+    print("   python scripts/backup.py")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: data/default_memory.json ===
+{
+  "notes": [
+    "Planned 4 tasks toward: Create a small top-down demo",
+    "Executed design_game_outline",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with walls, coins, and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a demo with walls, corridors, coins, and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Coins + HUD + signs + dialogue",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Coins + HUD + signs + dialogue",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPCs should wander and face the player during dialogue",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPCs should wander and face the player during dialogue",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPCs should wander and face the player during dialogue",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPC idle wander with anti-sticking fix",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPC idle wander with anti-sticking fix",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPC idle wander with anti-sticking fix",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPC idle wander with anti-sticking fix",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: NPC idle wander with anti-sticking fix",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Fix NPC facing direction toward player",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Fix NPC facing direction toward player",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Create a small top-down demo with coins and two NPCs",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue",
+    "Planned 4 tasks toward: Restore viewer",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue"
+  ],
+  "facts": []
+}
+=== END FILE ===
+
+=== FILE: data/default_outline.json ===
+{
+  "project": "default",
+  "timestamp": 1761186615,
+  "pitch": "A tiny vertical slice toward: Restore viewer",
+  "mechanics": [
+    "top-down movement",
+    "collision",
+    "talk to NPCs (E)"
+  ],
+  "art": "placeholder sprites",
+  "music": "placeholder loop",
+  "levels": [
+    "meadow_v1"
+  ],
+  "npcs": [
+    "guide_v1",
+    "merchant_v1"
+  ]
+}
+=== END FILE ===
+
+=== FILE: data/demo_memory.json ===
+{
+  "notes": [
+    "Planned 4 tasks toward: Make a meadow level with 10 coins and a guide",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue"
+  ],
+  "facts": []
+}
+=== END FILE ===
+
+=== FILE: data/demo_outline.json ===
+{
+  "project": "demo",
+  "timestamp": 1761098179,
+  "pitch": "A tiny vertical slice toward: Make a meadow level with 10 coins and a guide",
+  "mechanics": [
+    "top-down movement",
+    "collect items",
+    "talk to NPCs"
+  ],
+  "art": "placeholder sprites",
+  "music": "placeholder loop",
+  "levels": [
+    "meadow_v1"
+  ],
+  "npcs": [
+    "guide_v1",
+    "merchant_v1"
+  ]
+}
+=== END FILE ===
+
+=== FILE: data/HANDOFF.txt ===
+ECLIPSERA HANDOFF — 2025-10-22T22:38:23
+
+What this is
+------------
+Autonomous agents that generate a small playable slice (outline, level JSON, NPCs, dialogue) plus a simple viewer.
+
+How to run on a fresh machine (Windows, PowerShell)
+---------------------------------------------------
+1) Create/activate venv:
+   py -m venv .venv
+   . .\.venv\Scripts\Activate.ps1
+   python -m pip install --upgrade pip setuptools wheel
+2) Install viewer dependency:
+   pip install pygame-ce
+3) Generate & run viewer:
+   python run.py --goal "Create a small top-down demo with coins and two NPCs" --project default --viewer
+
+Current project snapshot
+------------------------
+Projects in state: ['default', 'demo']
+Outlines found: ['default_outline.json', 'demo_outline.json']
+Task log present: True
+
+Last recorded plan
+------------------
+Goal: Restore viewer
+Tasks:
+  - design_game_outline {'goal': 'Restore viewer', 'project': 'default'}
+  - generate_level_json {'name': 'meadow_v1', 'project': 'default'}
+  - generate_npcs {'project': 'default'}
+  - write_dialogue {'project': 'default'}
+
+File tree
+---------
+.
+  - README.md
+  - bootstrap_eclipsera.py
+  - run.py
+  .vscode
+    - settings.json
+  agents
+    - planner.py
+    - worker.py
+  assets
+    - default_dialogue.json
+    - default_level_meadow_v1.json
+    - default_npcs.json
+    - demo_dialogue.json
+    - demo_level_meadow_v1.json
+    - demo_npcs.json
+  core
+    - bus.py
+    - memory.py
+    - skills.py
+  data
+    - CODEBUNDLE.txt
+    - HANDOFF.txt
+    - default_memory.json
+    - default_outline.json
+    - demo_memory.json
+    - demo_outline.json
+    - state.json
+    - task_log.jsonl
+  runtime
+    - viewer.py
+  scripts
+    - backup.py
+    - export_code_bundle.py
+    - export_handoff.py
+    - restore_from_bundle.py
+  skills
+
+Next suggested steps
+--------------------
+- Add collisions & dialogue UI to the viewer.
+- Add richer NPC generation (traits, movement patterns).
+- Add Critic agent to propose v2/v3 refinements.
+
+=== END FILE ===
+
+=== FILE: data/state.json ===
+{
+  "projects": {
+    "default": {
+      "created": 1761097769.3838327,
+      "notes": "",
+      "artifacts": [
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with walls generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with corridors generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        },
+        {
+          "type": "outline",
+          "path": "data/default_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/default_level_meadow_v1.json",
+          "summary": "Level meadow_v1 with coins/signs generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/default_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/default_dialogue.json",
+          "summary": "Dialogue written."
+        }
+      ]
+    },
+    "demo": {
+      "created": 1761098179.9438968,
+      "notes": "",
+      "artifacts": [
+        {
+          "type": "outline",
+          "path": "data/demo_outline.json",
+          "summary": "Game outline created."
+        },
+        {
+          "type": "level",
+          "path": "assets/demo_level_meadow_v1.json",
+          "summary": "Level meadow_v1 generated."
+        },
+        {
+          "type": "npcs",
+          "path": "assets/demo_npcs.json",
+          "summary": "Basic NPCs created."
+        },
+        {
+          "type": "dialogue",
+          "path": "assets/demo_dialogue.json",
+          "summary": "Dialogue written."
+        }
+      ]
+    }
+  },
+  "current_project": "default"
+}
+=== END FILE ===
+
+=== FILE: data/task_log.jsonl ===
+{"ts": 1761097631.3533819, "type": "plan", "plan": {"goal": "Create a small top-down demo", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761097631.3547385, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761097769.390851, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761097769.3917053, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761097769.3926322, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 generated."}}
+{"ts": 1761097769.3938305, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761097769.3945427, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761098179.9442837, "type": "plan", "plan": {"goal": "Make a meadow level with 10 coins and a guide", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Make a meadow level with 10 coins and a guide", "project": "demo"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "demo"}}, {"skill": "generate_npcs", "args": {"project": "demo"}}, {"skill": "write_dialogue", "args": {"project": "demo"}}]}}
+{"ts": 1761098179.9451466, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Make a meadow level with 10 coins and a guide", "project": "demo"}}, "result": {"type": "outline", "path": "data/demo_outline.json", "summary": "Game outline created."}}
+{"ts": 1761098179.946114, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "demo"}}, "result": {"type": "level", "path": "assets/demo_level_meadow_v1.json", "summary": "Level meadow_v1 generated."}}
+{"ts": 1761098179.9468358, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "demo"}}, "result": {"type": "npcs", "path": "assets/demo_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761098179.9474638, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "demo"}}, "result": {"type": "dialogue", "path": "assets/demo_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761098777.1258345, "type": "plan", "plan": {"goal": "Create a small top-down demo with walls, coins, and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with walls, coins, and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761098777.1267614, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with walls, coins, and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761098777.1276946, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with walls generated."}}
+{"ts": 1761098777.1286, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761098777.1294937, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761099490.4283986, "type": "plan", "plan": {"goal": "Create a demo with walls, corridors, coins, and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a demo with walls, corridors, coins, and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761099490.4294016, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a demo with walls, corridors, coins, and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761099490.4304886, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with corridors generated."}}
+{"ts": 1761099490.431394, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761099490.4322515, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761101317.6991804, "type": "plan", "plan": {"goal": "Coins + HUD + signs + dialogue", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Coins + HUD + signs + dialogue", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761101317.7001917, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Coins + HUD + signs + dialogue", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761101317.701197, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761101317.7021592, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761101317.7030077, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761101334.3031723, "type": "plan", "plan": {"goal": "Coins + HUD + signs + dialogue", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Coins + HUD + signs + dialogue", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761101334.3040977, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Coins + HUD + signs + dialogue", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761101334.3051894, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761101334.3059916, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761101334.3067377, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761101660.7101493, "type": "plan", "plan": {"goal": "NPCs should wander and face the player during dialogue", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761101660.7112806, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761101660.7123053, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761101660.7130985, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761101660.7139266, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761101723.583481, "type": "plan", "plan": {"goal": "NPCs should wander and face the player during dialogue", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761101723.5844836, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761101723.5854776, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761101723.5863261, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761101723.5871964, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761101787.504171, "type": "plan", "plan": {"goal": "NPCs should wander and face the player during dialogue", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761101787.5050616, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPCs should wander and face the player during dialogue", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761101787.506109, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761101787.506933, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761101787.5077875, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102065.0698411, "type": "plan", "plan": {"goal": "NPC idle wander with anti-sticking fix", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102065.070725, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102065.0717065, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102065.072575, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102065.0737193, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102209.2712631, "type": "plan", "plan": {"goal": "NPC idle wander with anti-sticking fix", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102209.2723489, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102209.2733252, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102209.2742505, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102209.2752388, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102329.7564926, "type": "plan", "plan": {"goal": "NPC idle wander with anti-sticking fix", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102329.7573392, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102329.7583706, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102329.759348, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102329.7606788, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102358.8010364, "type": "plan", "plan": {"goal": "NPC idle wander with anti-sticking fix", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102358.802127, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102358.8032076, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102358.8040183, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102358.8049023, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102408.9351866, "type": "plan", "plan": {"goal": "NPC idle wander with anti-sticking fix", "tasks": [{"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102408.9364023, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "NPC idle wander with anti-sticking fix", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102408.9373715, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102408.938278, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102408.9390953, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102707.8097727, "type": "plan", "plan": {"goal": "Fix NPC facing direction toward player", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Fix NPC facing direction toward player", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102707.810663, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Fix NPC facing direction toward player", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102707.811731, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102707.812631, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102707.8134918, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761102884.0344245, "type": "plan", "plan": {"goal": "Fix NPC facing direction toward player", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Fix NPC facing direction toward player", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761102884.0353065, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Fix NPC facing direction toward player", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761102884.0363362, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761102884.037159, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761102884.0379908, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184110.0673487, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184110.0697987, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184110.0709505, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184110.072305, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184110.0732894, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184115.128195, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184115.12918, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184115.1301434, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184115.1308389, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184115.1315715, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184144.029719, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184144.0305994, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184144.031529, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184144.0325127, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184144.033318, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184217.6237314, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184217.624716, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184217.625606, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184217.6264005, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184217.6271994, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184396.7213674, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184396.7222717, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184396.7232535, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184396.7240665, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184396.7250676, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184575.67552, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184575.6765933, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184575.6775618, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184575.6782765, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184575.6791024, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184607.4084547, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184607.4093578, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184607.4102185, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184607.410968, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184607.4117153, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184657.0537016, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184657.0546672, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184657.0556493, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184657.0564551, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184657.0572078, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761184756.7667868, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761184756.7678313, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761184756.7687612, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761184756.7696455, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761184756.7705536, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761185370.9231389, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761185370.9240844, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761185370.9252312, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761185370.9260762, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761185370.9269123, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761185416.5216355, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761185416.5226355, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761185416.5235326, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761185416.5243309, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761185416.5253437, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761185462.3472786, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761185462.3482747, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761185462.3492305, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761185462.3546882, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761185462.3554816, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761186068.7028148, "type": "plan", "plan": {"goal": "Create a small top-down demo with coins and two NPCs", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761186068.7038858, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Create a small top-down demo with coins and two NPCs", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761186068.704988, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761186068.7059577, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761186068.7068896, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+{"ts": 1761186615.8476138, "type": "plan", "plan": {"goal": "Restore viewer", "tasks": [{"skill": "design_game_outline", "args": {"goal": "Restore viewer", "project": "default"}}, {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, {"skill": "generate_npcs", "args": {"project": "default"}}, {"skill": "write_dialogue", "args": {"project": "default"}}]}}
+{"ts": 1761186615.8485193, "type": "task_result", "task": {"skill": "design_game_outline", "args": {"goal": "Restore viewer", "project": "default"}}, "result": {"type": "outline", "path": "data/default_outline.json", "summary": "Game outline created."}}
+{"ts": 1761186615.8494225, "type": "task_result", "task": {"skill": "generate_level_json", "args": {"name": "meadow_v1", "project": "default"}}, "result": {"type": "level", "path": "assets/default_level_meadow_v1.json", "summary": "Level meadow_v1 with coins/signs generated."}}
+{"ts": 1761186615.850265, "type": "task_result", "task": {"skill": "generate_npcs", "args": {"project": "default"}}, "result": {"type": "npcs", "path": "assets/default_npcs.json", "summary": "Basic NPCs created."}}
+{"ts": 1761186615.851088, "type": "task_result", "task": {"skill": "write_dialogue", "args": {"project": "default"}}, "result": {"type": "dialogue", "path": "assets/default_dialogue.json", "summary": "Dialogue written."}}
+
+=== END FILE ===
+
+=== FILE: README.md ===
+# Eclipsera
+Autonomous agents that create video games (content, levels, NPCs, and runtime).
+- Run: `python run.py`
+- Export handoff: `python scripts\export_handoff.py`
+- Backup zip: `python scripts\backup.py`
+
+=== END FILE ===
+
+=== FILE: run.py ===
+import argparse, json, os, sys, time, subprocess
+from core.bus import MessageBus
+from core.memory import Memory
+from core.skills import SkillRegistry
+from agents.planner import PlannerAgent
+from agents.worker import WorkerAgent
+
+DATA_DIR = "data"
+STATE_FILE = os.path.join(DATA_DIR, "state.json")
+LOG_FILE = os.path.join(DATA_DIR, "task_log.jsonl")
+
+def ensure_dirs():
+    for d in ["core","agents","runtime","skills","assets","data","scripts"]:
+        os.makedirs(d, exist_ok=True)
+
+def load_state():
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE,"r",encoding="utf-8") as f:
+            return json.load(f)
+    return {"projects": {}, "current_project":"default"}
+
+def save_state(state):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    with open(STATE_FILE,"w",encoding="utf-8") as f:
+        json.dump(state, f, indent=2, ensure_ascii=False)
+
+def log_task(event):
+    with open(LOG_FILE,"a",encoding="utf-8") as f:
+        f.write(json.dumps(event, ensure_ascii=False) + "\n")
+
+def maybe_autobackup(do_backup: bool):
+    if not do_backup:
+        return
+    try:
+        # HANDOFF first
+        subprocess.run([sys.executable, os.path.join("scripts","export_handoff.py")], check=False)
+        # then ZIP
+        subprocess.run([sys.executable, os.path.join("scripts","backup.py")], check=False)
+        print("Auto-backup complete (handoff + zip).")
+    except Exception as e:
+        print("Auto-backup failed:", e)
+
+def main():
+    ensure_dirs()
+    parser = argparse.ArgumentParser(description="Eclipsera runner")
+    parser.add_argument("--goal", type=str, default="Create a small top-down demo",
+                        help="High-level creation goal")
+    parser.add_argument("--project", type=str, default="default", help="Project name")
+    parser.add_argument("--viewer", action="store_true", help="Launch the viewer after generation")
+    parser.add_argument("--autobackup", action="store_true", help="Export HANDOFF and create backup.zip after run")
+    args = parser.parse_args()
+
+    state = load_state()
+    state["current_project"] = args.project
+    if args.project not in state["projects"]:
+        state["projects"][args.project] = {"created": time.time(), "notes": ""}
+
+    bus = MessageBus()
+    mem = Memory(os.path.join("data", f"{args.project}_memory.json"))
+    skills = SkillRegistry(); skills.register_defaults()
+    planner = PlannerAgent(bus, mem, skills, project=args.project)
+    worker  = WorkerAgent(bus, mem, skills, project=args.project)
+
+    plan = planner.propose_plan(args.goal)
+    log_task({"ts": time.time(), "type":"plan", "plan": plan})
+    for task in plan.get("tasks", []):
+        result = worker.execute_task(task)
+        log_task({"ts": time.time(), "type":"task_result", "task": task, "result": result})
+        state["projects"][args.project].setdefault("artifacts", []).append(result)
+
+    save_state(state)
+    print("Generation done. See data/task_log.jsonl and assets/.")
+
+    if args.viewer:
+        from runtime.viewer import run_viewer
+        run_viewer(args.project)
+
+    maybe_autobackup(args.autobackup)
+    print("Tip: manual handoff -> python scripts/export_handoff.py | manual backup -> python scripts/backup.py")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: runtime/viewer.py ===
+import json, os, pygame, random
+
+TILE = 32
+PLAYER_SIZE = 24
+WALL = "#"
+
+def load_json(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def rect_for_grid(x, y, tile=TILE, w=TILE, h=TILE):
+    return pygame.Rect(x*tile, y*tile, w, h)
+
+# --- NPC with idle wander + anti-sticking + correct facing ---
+class NPC:
+    def __init__(self, data):
+        self.id = data["id"]
+        self.name = data.get("name", self.id)
+        self.grid_x = data["x"]
+        self.grid_y = data["y"]
+        self.rect = rect_for_grid(self.grid_x, self.grid_y)
+        # subpixel position for smooth slow movement
+        self.pos_x = float(self.rect.x)
+        self.pos_y = float(self.rect.y)
+        self.speed = 1.2
+        self.cooldown = 0
+        self.dir = (0, 0)      # (-1,0,1)
+        self.facing = (0, 1)   # draw hint (down)
+
+    def _choose_new_intention(self):
+        # more idling than walking for natural feel
+        choices = [(0,0)]*6 + [(1,0), (-1,0), (0,1), (0,-1)]
+        self.dir = random.choice(choices)
+        self.cooldown = random.randint(30, 90)
+
+    def update(self, can_move_fn, stop=False):
+        if stop:
+            self.dir = (0, 0)
+            self.cooldown = 15
+            return
+
+        if self.cooldown <= 0:
+            self._choose_new_intention()
+
+        dx = self.dir[0] * self.speed
+        dy = self.dir[1] * self.speed
+        moved_any = False
+
+        # axis-separated small steps; ignore my own id during collision
+        if dx:
+            step_x = 1 if dx > 0 else -1
+            if can_move_fn(self.rect, step_x, 0, ignore_id=self.id):
+                self.pos_x += dx
+                self.rect.x = int(round(self.pos_x))
+                moved_any = True
+        if dy:
+            step_y = 1 if dy > 0 else -1
+            if can_move_fn(self.rect, 0, step_y, ignore_id=self.id):
+                self.pos_y += dy
+                self.rect.y = int(round(self.pos_y))
+                moved_any = True
+
+        if moved_any and self.dir != (0,0):
+            self.facing = self.dir
+        else:
+            # if blocked, force a re-pick next frame
+            self.cooldown = 0
+
+        self.cooldown -= 1
+
+    def face_toward(self, target_center):
+        cx, cy = self.rect.center
+        tx, ty = target_center
+        dx, dy = (tx - cx), (ty - cy)
+        # Correct Y: screen Y grows downward, so "up" is dy < 0
+        if abs(dx) > abs(dy):
+            self.facing = (1, 0) if dx > 0 else (-1, 0)
+        else:
+            self.facing = (0, -1) if dy < 0 else (0, 1)
+
+def run_viewer(project: str):
+    level_path = f"assets/{project}_level_meadow_v1.json"
+    npcs_path  = f"assets/{project}_npcs.json"
+    dialogue_path = f"assets/{project}_dialogue.json"
+
+    if not (os.path.exists(level_path) and os.path.exists(npcs_path)):
+        print("No generated assets yet. Run: python run.py --viewer")
+        return
+
+    lvl = load_json(level_path)
+    npcs_data = load_json(npcs_path)
+    dialogue = load_json(dialogue_path) if os.path.exists(dialogue_path) else {}
+
+    pygame.init()
+    font = pygame.font.SysFont(None, 20)
+    big  = pygame.font.SysFont(None, 28)
+
+    tiles = lvl["tiles"]
+    rows, cols = len(tiles), len(tiles[0])
+    w, h = cols*TILE, rows*TILE
+    screen = pygame.display.set_mode((w, h))
+    pygame.display.set_caption("Eclipsera Viewer — WASD/arrows move • E talk/read • SPACE next • ESC quit")
+
+    # Walls
+    wall_rects = [rect_for_grid(x, y) for y, row in enumerate(tiles) for x, c in enumerate(row) if c == WALL]
+
+    # Objects (coins + signs)
+    objects = lvl.get("objects", [])
+
+    # NPCs
+    npcs = [NPC(d) for d in npcs_data]
+    npc_map = {n.id: n for n in npcs}
+
+    # Player (centered inside tile)
+    px, py = lvl["player_spawn"]
+    player = pygame.Rect(px*TILE + (TILE-PLAYER_SIZE)//2,
+                         py*TILE + (TILE-PLAYER_SIZE)//2,
+                         PLAYER_SIZE, PLAYER_SIZE)
+    speed = 3
+
+    # Dialogue/sign state
+    talking_to = None
+    dlg_index = 0
+    is_dialogue_open = False
+    sign_buffer = []
+
+    # Coins/HUD
+    coins_total = sum(1 for o in objects if o["type"] == "coin")
+    coins_collected = 0
+    win = False
+
+    clock = pygame.time.Clock()
+
+    def can_move(rect, dx, dy, ignore_id=None):
+        trial = rect.move(dx, dy)
+        # walls
+        for wrect in wall_rects:
+            if trial.colliderect(wrect):
+                return False
+        # npcs (other than me if I'm an npc)
+        for n in npcs:
+            if ignore_id is not None and n.id == ignore_id:
+                continue
+            if trial.colliderect(n.rect):
+                return False
+        # player blocks npcs too
+        if ignore_id is not None and trial.colliderect(player):
+            return False
+        # bounds
+        if trial.left < 0 or trial.top < 0 or trial.right > w or trial.bottom > h:
+            return False
+        return True
+
+    def player_can_move(dx, dy):
+        trial = player.move(dx, dy)
+        for wrect in wall_rects:
+            if trial.colliderect(wrect): return False
+        for n in npcs:
+            if trial.colliderect(n.rect): return False
+        if not (0 <= trial.left and 0 <= trial.top and trial.right <= w and trial.bottom <= h):
+            return False
+        return True
+
+    def nearest_npc(rect, max_dist=36):
+        nearest, best = None, 1e9
+        cx, cy = rect.center
+        for n in npcs:
+            nx, ny = n.rect.center
+            d = ((cx-nx)**2 + (cy-ny)**2) ** 0.5
+            if d < best and d <= max_dist:
+                best, nearest = d, n
+        return nearest
+
+    def nearest_sign(rect, max_dist=36):
+        nearest, best = None, 1e9
+        cx, cy = rect.center
+        for obj in objects:
+            if obj["type"] != "sign": continue
+            orect = rect_for_grid(obj["x"], obj["y"])
+            ox, oy = orect.center
+            d = ((cx-ox)**2 + (cy-oy)**2) ** 0.5
+            if d < best and d <= max_dist:
+                best, nearest = d, obj
+        return nearest
+
+    def wrap_text(text, max_px):
+        words, lines, cur = text.split(), [], ""
+        while words:
+            nxt = (cur + " " + words[0]).strip()
+            if big.size(nxt)[0] <= max_px:
+                cur = nxt; words.pop(0)
+            else:
+                lines.append(cur); cur = ""
+        if cur: lines.append(cur)
+        return lines
+
+    def draw_world():
+        screen.fill((24,24,24))
+        # grid
+        for y in range(rows):
+            for x in range(cols):
+                pygame.draw.rect(screen, (58,58,58), rect_for_grid(x, y), 1)
+        # walls
+        for wr in wall_rects:
+            pygame.draw.rect(screen, (90,90,90), wr)
+        # objects
+        for obj in objects:
+            r = rect_for_grid(obj["x"], obj["y"])
+            if obj["type"] == "coin":
+                pygame.draw.rect(screen, (220,200,40), r)
+            elif obj["type"] == "sign":
+                pygame.draw.rect(screen, (0,150,200), r)
+
+        # npcs + name + facing notch
+        for n in npcs:
+            pygame.draw.rect(screen, (200,80,80), n.rect)
+            name_surf = font.render(n.name, True, (230,230,230))
+            screen.blit(name_surf, (n.rect.x, n.rect.y-18))
+            fx, fy = n.facing
+            notch = n.rect.copy()
+            if fx == 1:   notch = pygame.Rect(n.rect.right-4, n.rect.y+10, 4, 12)
+            if fx == -1:  notch = pygame.Rect(n.rect.left,      n.rect.y+10, 4, 12)
+            if fy == 1:   notch = pygame.Rect(n.rect.x+10,      n.rect.bottom-4, 12, 4)
+            if fy == -1:  notch = pygame.Rect(n.rect.x+10,      n.rect.top,       12, 4)
+            pygame.draw.rect(screen, (255,180,180), notch)
+
+        # player
+        pygame.draw.rect(screen, (220,220,220), player)
+
+        # HUD
+        hud = big.render(f"Coins: {coins_collected}/{coins_total}", True, (255,255,255))
+        screen.blit(hud, (8, 6))
+        if win:
+            banner = big.render("All coins collected! ESC to quit.", True, (255,255,255))
+            screen.blit(banner, (w//2 - banner.get_width()//2, 8))
+
+    def draw_dialogue_box(lines, who=None):
+        box = pygame.Surface((w - 24, 110), pygame.SRCALPHA)
+        box.fill((0, 0, 0, 200))
+        screen.blit(box, (12, h - 122))
+        y = h - 116
+        if who:
+            who_s = big.render(who, True, (255,255,255))
+            screen.blit(who_s, (24, y)); y += 28
+        for L in lines[:3]:
+            s = font.render(L, True, (230,230,230))
+            screen.blit(s, (24, y)); y += 22
+        hint = font.render("SPACE: next • ESC: close", True, (180,180,180))
+        screen.blit(hint, (w - hint.get_width() - 20, h - 28))
+
+    # --- main loop ---
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit(); return
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    if is_dialogue_open:
+                        is_dialogue_open = False
+                        talking_to = None
+                        sign_buffer = []
+                    else:
+                        pygame.quit(); return
+                elif e.key == pygame.K_e and not is_dialogue_open:
+                    npc = nearest_npc(player)
+                    if npc:
+                        talking_to = npc.id; dlg_index = 0; is_dialogue_open = True
+                        npc.face_toward(player.center)
+                    else:
+                        sign = nearest_sign(player)
+                        if sign:
+                            talking_to = "SIGN"
+                            sign_buffer = wrap_text(sign.get("text","(blank)"), w - 48)
+                            dlg_index = 0
+                            is_dialogue_open = True
+                elif e.key in (pygame.K_SPACE, pygame.K_RETURN):
+                    if is_dialogue_open:
+                        if talking_to == "SIGN":
+                            is_dialogue_open = False; talking_to = None; sign_buffer = []
+                        elif talking_to in dialogue:
+                            dlg_index += 1
+                            if dlg_index >= len(dialogue[talking_to]):
+                                is_dialogue_open = False; talking_to = None
+
+        keys = pygame.key.get_pressed()
+        if not is_dialogue_open and not win:
+            dx = dy = 0
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:   dx -= speed
+            if keys[pygame.K_RIGHT] or keys[pygame.K_d]:  dx += speed
+            if keys[pygame.K_UP] or keys[pygame.K_w]:     dy -= speed
+            if keys[pygame.K_DOWN] or keys[pygame.K_s]:   dy += speed
+            if dx and player_can_move(dx, 0): player.move_ip(dx, 0)
+            if dy and player_can_move(0, dy): player.move_ip(0, dy)
+
+            # coin pickup
+            remaining = []
+            for obj in objects:
+                if obj["type"] != "coin":
+                    remaining.append(obj); continue
+                if player.colliderect(rect_for_grid(obj["x"], obj["y"])):
+                    coins_collected += 1
+                else:
+                    remaining.append(obj)
+            objects = remaining
+            if coins_collected >= coins_total and coins_total > 0:
+                win = True
+
+        # update NPCs
+        for n in npcs:
+            n.update(can_move, stop=(is_dialogue_open and talking_to == n.id))
+
+        # draw
+        draw_world()
+        if is_dialogue_open:
+            if talking_to == "SIGN":
+                draw_dialogue_box(sign_buffer)
+            elif talking_to in dialogue:
+                line = dialogue[talking_to][dlg_index]
+                lines = wrap_text(line.get("text",""), w - 48)
+                draw_dialogue_box(lines, who=line.get("who","???"))
+
+        pygame.display.flip()
+        clock.tick(60)
+
+=== END FILE ===
+
+=== FILE: scripts/backup.py ===
+# scripts/backup.py
+import os, zipfile, datetime, pathlib
+
+EXCLUDES = {
+    ".venv", "__pycache__", ".git", ".idea", ".vscode", "node_modules"
+}
+EXCLUDE_EXTS = {".zip", ".pyc"}
+
+def should_skip(root, fname):
+    p = pathlib.Path(root) / fname
+    parts = set(p.parts)
+    if parts & EXCLUDES:
+        return True
+    if p.suffix.lower() in EXCLUDE_EXTS:
+        return True
+    return False
+
+def main():
+    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = f"backup_{ts}.zip"
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for root, dirs, files in os.walk("."):
+            # prune excluded dirs
+            dirs[:] = [d for d in dirs if d not in EXCLUDES]
+            for f in files:
+                if should_skip(root, f):
+                    continue
+                fp = os.path.join(root, f)
+                z.write(fp)
+    print(f"✅ Backup created: {out}")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: scripts/export_code_bundle.py ===
+# scripts/export_code_bundle.py
+import os, datetime, pathlib
+
+EXCLUDE_DIRS = {".venv", "__pycache__", ".git", "node_modules", ".idea", ".vscode"}
+EXCLUDE_EXTS = {".zip", ".pyc"}
+
+def should_skip(path: pathlib.Path):
+    parts = set(path.parts)
+    if parts & EXCLUDE_DIRS:
+        return True
+    if path.suffix.lower() in EXCLUDE_EXTS:
+        return True
+    return False
+
+def file_tree(root="."):
+    lines=[]
+    base = pathlib.Path(root).resolve()
+    for p in sorted(base.rglob("*")):
+        if p.is_dir():
+            rel = p.relative_to(base)
+            if should_skip(p): continue
+            lines.append(str(rel) + "/")
+        else:
+            rel = p.relative_to(base)
+            if should_skip(p): continue
+            lines.append(str(rel))
+    return "\n".join(lines)
+
+def main():
+    ts = datetime.datetime.now().isoformat(timespec="seconds")
+    base = pathlib.Path(".").resolve()
+    outdir = base / "data"
+    outdir.mkdir(exist_ok=True)
+    out = outdir / "CODEBUNDLE.txt"
+
+    with out.open("w", encoding="utf-8") as f:
+        f.write(f"ECLIPSERA CODE BUNDLE — {ts}\n")
+        f.write("Format: Each file is delimited by lines starting with === FILE: and === END FILE ===\n\n")
+
+        # include file tree for readability
+        f.write("FILE TREE\n---------\n")
+        f.write(file_tree("."))
+        f.write("\n\n")
+
+        for p in sorted(base.rglob("*")):
+            if p.is_dir(): 
+                continue
+            if should_skip(p): 
+                continue
+            rel = p.relative_to(base)
+            try:
+                content = p.read_text(encoding="utf-8")
+            except Exception:
+                # skip binary files just in case
+                continue
+            f.write(f"=== FILE: {rel.as_posix()} ===\n")
+            f.write(content)
+            f.write("\n=== END FILE ===\n\n")
+
+    print(f"✅ Wrote {out}")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: scripts/export_handoff.py ===
+# scripts/export_handoff.py
+import os, json, datetime, textwrap
+
+ROOT = "."
+
+def read_json_lines(path):
+    if not os.path.exists(path): return []
+    out = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            try:
+                out.append(json.loads(line))
+            except Exception:
+                pass
+    return out
+
+def file_tree(root="."):
+    lines=[]
+    base_depth = root.count(os.sep)
+    for r, dirs, files in os.walk(root):
+        # prune noisy stuff
+        dirs[:] = [d for d in dirs if d not in (".venv","__pycache__", ".git", "node_modules")]
+        depth = r.count(os.sep)-base_depth
+        indent = "  "*depth
+        name = os.path.basename(r) or r
+        lines.append(f"{indent}{name}")
+        for f in sorted(files):
+            if f.endswith((".zip",".pyc")): continue
+            lines.append(f"{indent}  - {f}")
+    return "\n".join(lines)
+
+def last_plan_summary(task_log_events):
+    # find the last event of type "plan"
+    for ev in reversed(task_log_events):
+        if ev.get("type") == "plan":
+            plan = ev.get("plan", {})
+            goal = plan.get("goal", "(unknown)")
+            tasks = plan.get("tasks", [])
+            tasks_str = "\n".join([f"  - {t.get('skill')} {t.get('args',{})}" for t in tasks])
+            return f"Goal: {goal}\nTasks:\n{tasks_str}"
+    return "No plan recorded yet."
+
+def main():
+    now = datetime.datetime.now().isoformat(timespec="seconds")
+    os.makedirs("data", exist_ok=True)
+
+    state = {}
+    if os.path.exists("data/state.json"):
+        try:
+            with open("data/state.json","r",encoding="utf-8") as f:
+                state = json.load(f)
+        except Exception:
+            pass
+
+    events = read_json_lines("data/task_log.jsonl")
+    plan_str = last_plan_summary(events)
+
+    outlines = [p for p in os.listdir("data") if p.endswith("_outline.json")]
+    projects = list(state.get("projects", {}).keys())
+
+    handoff = f"""ECLIPSERA HANDOFF — {now}
+
+What this is
+------------
+Autonomous agents that generate a small playable slice (outline, level JSON, NPCs, dialogue) plus a simple viewer.
+
+How to run on a fresh machine (Windows, PowerShell)
+---------------------------------------------------
+1) Create/activate venv:
+   py -m venv .venv
+   . .\\.venv\\Scripts\\Activate.ps1
+   python -m pip install --upgrade pip setuptools wheel
+2) Install viewer dependency:
+   pip install pygame-ce
+3) Generate & run viewer:
+   python run.py --goal "Create a small top-down demo with coins and two NPCs" --project default --viewer
+
+Current project snapshot
+------------------------
+Projects in state: {projects}
+Outlines found: {outlines}
+Task log present: {bool(events)}
+
+Last recorded plan
+------------------
+{plan_str}
+
+File tree
+---------
+{file_tree(ROOT)}
+
+Next suggested steps
+--------------------
+- Add collisions & dialogue UI to the viewer.
+- Add richer NPC generation (traits, movement patterns).
+- Add Critic agent to propose v2/v3 refinements.
+"""
+
+    out_path = "data/HANDOFF.txt"
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(handoff)
+
+    print("✅ Created:", out_path)
+    print("Seemless Thread.")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+
+=== FILE: scripts/restore_from_bundle.py ===
+# scripts/restore_from_bundle.py
+import os, re, pathlib
+
+BUNDLE_PATH = pathlib.Path("data/CODEBUNDLE.txt")
+
+def main():
+    if not BUNDLE_PATH.exists():
+        print("ERROR: data/CODEBUNDLE.txt not found.")
+        return
+    text = BUNDLE_PATH.read_text(encoding="utf-8")
+    # pattern to match sections
+    pattern = re.compile(r"^=== FILE: (.+?) ===\n(.*?)\n=== END FILE ===", re.S | re.M)
+    matches = pattern.findall(text)
+    if not matches:
+        print("No files found in bundle. Make sure the format matches export_code_bundle.py.")
+        return
+
+    for rel, content in matches:
+        rel_path = pathlib.Path(rel)
+        rel_path.parent.mkdir(parents=True, exist_ok=True)
+        rel_path.write_text(content, encoding="utf-8")
+        print("Wrote", rel)
+
+    print("✅ Restore complete.")
+
+if __name__ == "__main__":
+    main()
+
+=== END FILE ===
+

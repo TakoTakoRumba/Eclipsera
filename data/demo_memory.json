@@ -1,0 +1,10 @@
+{
+  "notes": [
+    "Planned 4 tasks toward: Make a meadow level with 10 coins and a guide",
+    "Executed design_game_outline",
+    "Executed generate_level_json",
+    "Executed generate_npcs",
+    "Executed write_dialogue"
+  ],
+  "facts": []
+}

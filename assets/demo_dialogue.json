@@ -1,0 +1,18 @@
+{
+  "guide_v1": [
+    {
+      "who": "Astra",
+      "text": "Welcome to Eclipsera!"
+    },
+    {
+      "who": "Astra",
+      "text": "Collect 5 coins and visit Roux."
+    }
+  ],
+  "merchant_v1": [
+    {
+      "who": "Roux",
+      "text": "Care to trade a coin for a hint?"
+    }
+  ]
+}

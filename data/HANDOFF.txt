@@ -1,0 +1,77 @@
+ECLIPSERA HANDOFF — 2025-10-22T22:38:23
+
+What this is
+------------
+Autonomous agents that generate a small playable slice (outline, level JSON, NPCs, dialogue) plus a simple viewer.
+
+How to run on a fresh machine (Windows, PowerShell)
+---------------------------------------------------
+1) Create/activate venv:
+   py -m venv .venv
+   . .\.venv\Scripts\Activate.ps1
+   python -m pip install --upgrade pip setuptools wheel
+2) Install viewer dependency:
+   pip install pygame-ce
+3) Generate & run viewer:
+   python run.py --goal "Create a small top-down demo with coins and two NPCs" --project default --viewer
+
+Current project snapshot
+------------------------
+Projects in state: ['default', 'demo']
+Outlines found: ['default_outline.json', 'demo_outline.json']
+Task log present: True
+
+Last recorded plan
+------------------
+Goal: Restore viewer
+Tasks:
+  - design_game_outline {'goal': 'Restore viewer', 'project': 'default'}
+  - generate_level_json {'name': 'meadow_v1', 'project': 'default'}
+  - generate_npcs {'project': 'default'}
+  - write_dialogue {'project': 'default'}
+
+File tree
+---------
+.
+  - README.md
+  - bootstrap_eclipsera.py
+  - run.py
+  .vscode
+    - settings.json
+  agents
+    - planner.py
+    - worker.py
+  assets
+    - default_dialogue.json
+    - default_level_meadow_v1.json
+    - default_npcs.json
+    - demo_dialogue.json
+    - demo_level_meadow_v1.json
+    - demo_npcs.json
+  core
+    - bus.py
+    - memory.py
+    - skills.py
+  data
+    - CODEBUNDLE.txt
+    - HANDOFF.txt
+    - default_memory.json
+    - default_outline.json
+    - demo_memory.json
+    - demo_outline.json
+    - state.json
+    - task_log.jsonl
+  runtime
+    - viewer.py
+  scripts
+    - backup.py
+    - export_code_bundle.py
+    - export_handoff.py
+    - restore_from_bundle.py
+  skills
+
+Next suggested steps
+--------------------
+- Add collisions & dialogue UI to the viewer.
+- Add richer NPC generation (traits, movement patterns).
+- Add Critic agent to propose v2/v3 refinements.
