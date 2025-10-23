@@ -1,0 +1,15 @@
+# Python cache/bytecode
+__pycache__/
+*.pyc
+
+# Local virtual envs
+.venv/
+
+# Editor/OS junk
+.vscode/
+.idea/
+.DS_Store
+
+# Backups & generated bundles
+backup_*.zip
+data/CODEBUNDLE.txt
